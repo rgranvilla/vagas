@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "target": "ES2020",
+    "module": "CommonJS",
+    "baseUrl": "./",
+    "paths": {
+      "@app": ["./src/core/app.ts"],
+      "@server": ["./src/core/server.ts"],
+      "@config/*": ["./src/config/*"],
+      "@database": ["./src/core/database"],
+      "@factories/*": ["./src/core/factories/*"],
+      "@utils/*": ["./src/core/utils/*"],
+      "@errors/*": ["./src/core/errors/*"],
+      "@routes/*": ["./src/core/routes.ts"],
+      "@middlewares/*": ["./src/core/middlewares/*"],
+      "@containers": ["./src/core/containers.ts"],
+      "@modules/*": ["./src/modules/*"]
+    },
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

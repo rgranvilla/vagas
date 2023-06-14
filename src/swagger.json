@@ -1,0 +1,913 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Documentation",
+    "description": "SCF Brazil Selection Process",
+    "version": "1.0.0",
+    "contact": {
+      "email": "rgranvilla@gmail.com"
+    }
+  },
+  "paths": {
+    "/user": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get user by name",
+        "description": "Get user by name",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            },
+            "example": "John Doe",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation field error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ValidationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/NotFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unhandled Errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ErrorsUnhandled"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create a user",
+        "description": "Create a new user",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "job": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "name": "User Name",
+                  "password": "password123",
+                  "job": "Developer"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation field error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ValidationError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User name already exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/UserNameAlreadyExist"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unhandled Errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ErrorsUnhandled"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Users"],
+        "summary": "List all users",
+        "description": "List all users",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/Users"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unhandled Errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ErrorsUnhandled"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Delete a user",
+        "description": "Delete a user by ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/Deleted"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/NotFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unhandled Errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ErrorsUnhandled"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Users"],
+        "summary": "Update a user",
+        "description": "Update a user by ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/ToUpdateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/UpdatedUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation field error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/NotFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unhandled Errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ErrorsUnhandled"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": ["Metrics"],
+        "summary": "Get users metrics",
+        "description": "Get metrics related to user access",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/Metrics"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unhandled Errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ErrorsUnhandled"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/users/{id}": {
+      "put": {
+        "tags": ["Admin"],
+        "summary": "Update user permissions",
+        "description": "Update user permissions by ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/UserPermissions"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/UpdatedUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation field error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/Unauthorized"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/NotFound"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unhandled Errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ErrorsUnhandled"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions": {
+      "post": {
+        "tags": ["Sessions"],
+        "summary": "Authenticate user",
+        "description": "Authenticate user with name and password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "name": "John Doe",
+                  "password": "password123"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "successfully" },
+                    "code": { "type": "number", "example": 200 },
+                    "message": {
+                      "type": "string",
+                      "example": "Successful login."
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                          "description": "The JSON Web Token (JWT) generated for the user session."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation field error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Credential Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unhandled Errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/ErrorsUnhandled"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "UserNameAlreadyExist": {
+      "description": "User name already exist.",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "conflict"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 409
+        },
+        "message": {
+          "type": "string",
+          "example": "User name already exist."
+        }
+      }
+    },
+    "Unauthorized": {
+      "description": "Unauthorized",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "unauthorized"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 401
+        },
+        "message": {
+          "type": "string",
+          "example": "Invalid credentials."
+        }
+      }
+    },
+    "NotFound": {
+      "description": "Not Found",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "not_found"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 404
+        },
+        "message": {
+          "type": "string",
+          "example": "Resource not found."
+        }
+      }
+    },
+    "ErrorsUnhandled": {
+      "description": "ErrorsUnhandled",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "server_error"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 500
+        },
+        "message": {
+          "type": "string",
+          "example": "Internal server error."
+        },
+        "error": {
+          "type": "object",
+          "example": "{...all error body is passed through here. }"
+        }
+      }
+    },
+    "ValidationError": {
+      "description": "Validation Error",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "validation_error"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 400
+        },
+        "message": {
+          "type": "string",
+          "example": "Validation Error"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "example": "Validation error."
+            },
+            "issues": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "field": {
+                    "type": "string",
+                    "example": "name"
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Expected string, received number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "successfully"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": "Users retrieval successful."
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "user": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "format": "int32",
+                  "example": 127
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "isAdmin": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "permissions": {
+                  "type": "object",
+                  "properties": {
+                    "canUpdate": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "canDelete": {
+                      "type": "boolean",
+                      "example": false
+                    }
+                  }
+                },
+                "job": {
+                  "type": "string",
+                  "example": "Developer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ToUpdateUser": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "password": {
+          "type": "string",
+          "example": "Password123"
+        },
+        "job": {
+          "type": "string",
+          "example": "Developer"
+        }
+      }
+    },
+    "UpdatedUser": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "successfully"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": ""
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "user": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "format": "int32",
+                  "example": 127
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "isAdmin": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "permissions": {
+                  "type": "object",
+                  "properties": {
+                    "canUpdate": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "canDelete": {
+                      "type": "boolean",
+                      "example": false
+                    }
+                  }
+                },
+                "job": {
+                  "type": "string",
+                  "example": "Developer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Users": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "successfully"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": "Users retrieval successful."
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "format": "int32",
+                    "example": 127
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "isAdmin": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "permissions": {
+                    "type": "object",
+                    "properties": {
+                      "canUpdate": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "canDelete": {
+                        "type": "boolean",
+                        "example": false
+                      }
+                    }
+                  },
+                  "job": {
+                    "type": "string",
+                    "example": "Developer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Metrics": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "successfully"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": "Metrics retrieval successful."
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "metrics": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "format": "int32",
+                    "example": 127
+                  },
+                  "readCount": {
+                    "type": "number",
+                    "format": "int32",
+                    "example": 12
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Deleted": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "example": "successfully"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200
+        },
+        "message": {
+          "type": "string",
+          "example": "User was deleted successfully."
+        }
+      }
+    },
+    "UserPermissions": {
+      "type": "object",
+      "properties": {
+        "isAdmin": {
+          "type": "boolean"
+        },
+        "canUpdate": {
+          "type": "boolean"
+        },
+        "canDelete": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
