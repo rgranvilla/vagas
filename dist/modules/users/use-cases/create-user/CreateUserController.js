@@ -33,6 +33,8 @@ __export(CreateUserController_exports, {
   CreateUserController: () => CreateUserController
 });
 module.exports = __toCommonJS(CreateUserController_exports);
+var import_tsyringe2 = require("tsyringe");
+var import_zod2 = require("zod");
 
 // src/core/errors/HandleErrors.ts
 var import_zod = require("zod");
@@ -139,6 +141,9 @@ function HandleErrors(err, res) {
   return res.status(response.code).json(response);
 }
 
+// src/modules/users/use-cases/create-user/CreateUserUseCase.ts
+var import_tsyringe = require("tsyringe");
+
 // src/core/utils/passwordHashing.ts
 var import_bcryptjs = require("bcryptjs");
 async function passwordHashing(password) {
@@ -146,22 +151,26 @@ async function passwordHashing(password) {
   return hashedPassword;
 }
 
-// src/modules/users/use-cases/create-user/CreateUserController.ts
-var import_tsyringe2 = require("tsyringe");
-var import_zod2 = require("zod");
-
 // src/modules/users/use-cases/create-user/CreateUserUseCase.ts
-var import_tsyringe = require("tsyringe");
 var CreateUserUseCase = class {
   constructor(repository) {
     this.repository = repository;
   }
   async execute(data) {
+    const hashedPassword = await passwordHashing(data.password);
     const userAlreadyExist = await this.repository.userExist(data.name);
     if (userAlreadyExist) {
       throw new UserNameAlreadyExistError();
     }
-    const user = await this.repository.createUser(data);
+    const user = await this.repository.createUser({
+      ...data,
+      password: hashedPassword,
+      isAdmin: data.isAdmin,
+      permissions: {
+        canUpdate: data.permissions?.canUpdate ?? false,
+        canDelete: data.permissions?.canDelete ?? false
+      }
+    });
     return user;
   }
 };
@@ -183,7 +192,7 @@ async function CreateUserController(req, res, next) {
     const createdUser = await createUserUseCase.execute({
       name,
       isAdmin: false,
-      password: await passwordHashing(password),
+      password,
       job
     });
     const response = responseFactory({

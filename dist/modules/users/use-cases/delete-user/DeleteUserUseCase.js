@@ -33,6 +33,7 @@ __export(DeleteUserUseCase_exports, {
   DeleteUserUseCase: () => DeleteUserUseCase
 });
 module.exports = __toCommonJS(DeleteUserUseCase_exports);
+var import_tsyringe = require("tsyringe");
 
 // src/core/errors/AppError.ts
 var AppError = class extends Error {
@@ -52,7 +53,6 @@ var ResourceNotFoundError = class extends AppError {
 };
 
 // src/modules/users/use-cases/delete-user/DeleteUserUseCase.ts
-var import_tsyringe = require("tsyringe");
 var DeleteUserUseCase = class {
   constructor(repository) {
     this.repository = repository;

@@ -43,11 +43,12 @@ __export(app_exports, {
   default: () => app_default
 });
 module.exports = __toCommonJS(app_exports);
-var import_body_parser = __toESM(require("body-parser"));
+var import_reflect_metadata2 = require("reflect-metadata");
 var import_express2 = __toESM(require("express"));
-var import_reflect_metadata = require("reflect-metadata");
+var import_swagger_ui_express = __toESM(require("swagger-ui-express"));
 
 // src/core/container.ts
+var import_reflect_metadata = require("reflect-metadata");
 var import_tsyringe2 = require("tsyringe");
 
 // src/core/database/index.ts
@@ -59,6 +60,29 @@ var DatabaseRepository = class {
     this._database = { users: [], metrics: [] };
     this._lastId = 0;
     this._loadDatabase();
+  }
+  async open() {
+    this._database = {
+      users: [
+        {
+          id: 1,
+          name: "admin",
+          isAdmin: true,
+          password: "$2a$06$JTkakiET1QKLLUQbDEpXs..VSuYpxcvWVnfS0hVuxxi6PvQz5U2uK",
+          job: "Admin",
+          permissions: { canUpdate: true, canDelete: true }
+        }
+      ],
+      metrics: []
+    };
+    await this.persist();
+  }
+  async close() {
+    this._database = {
+      users: [],
+      metrics: []
+    };
+    await this.persist();
   }
   async _loadDatabase() {
     const databasePath = import_node_path.default.join(__dirname, "./db.json");
@@ -420,12 +444,7 @@ var UpdateUserPermissionsUseCase = class {
   constructor(repository) {
     this.repository = repository;
   }
-  async execute(id, data, authenticatedUserId) {
-    const { isAdmin } = await this.repository.getUserById(
-      authenticatedUserId
-    );
-    if (!isAdmin)
-      throw new UnauthorizedActionError();
+  async execute(id, data) {
     const user = await this.repository.updateUserPermissions(id, data);
     if (!user) {
       throw new ResourceNotFoundError();
@@ -446,11 +465,7 @@ async function UpdateUserPermissionsController(req, res) {
     canDelete: import_zod3.z.boolean().optional().default(false),
     id: import_zod3.z.coerce.number()
   });
-  const requestUserSchema = import_zod3.z.object({
-    id: import_zod3.z.coerce.number()
-  });
   try {
-    const { id: authenticatedUserId } = requestUserSchema.parse(req.user);
     const { id, isAdmin, canUpdate, canDelete } = requestSchema.parse({
       ...req.params,
       ...req.body
@@ -467,8 +482,7 @@ async function UpdateUserPermissionsController(req, res) {
     );
     const updatedUser = await updateUserPermissionsUseCase.execute(
       id,
-      toUpdate,
-      authenticatedUserId
+      toUpdate
     );
     const response = responseFactory({
       status: "successfully",
@@ -591,6 +605,13 @@ async function AuthenticateUserController(req, res, next) {
   }
 }
 
+// src/modules/users/use-cases/create-user/CreateUserController.ts
+var import_tsyringe10 = require("tsyringe");
+var import_zod5 = require("zod");
+
+// src/modules/users/use-cases/create-user/CreateUserUseCase.ts
+var import_tsyringe9 = require("tsyringe");
+
 // src/core/utils/passwordHashing.ts
 var import_bcryptjs2 = require("bcryptjs");
 async function passwordHashing(password) {
@@ -598,22 +619,26 @@ async function passwordHashing(password) {
   return hashedPassword;
 }
 
-// src/modules/users/use-cases/create-user/CreateUserController.ts
-var import_tsyringe10 = require("tsyringe");
-var import_zod5 = require("zod");
-
 // src/modules/users/use-cases/create-user/CreateUserUseCase.ts
-var import_tsyringe9 = require("tsyringe");
 var CreateUserUseCase = class {
   constructor(repository) {
     this.repository = repository;
   }
   async execute(data) {
+    const hashedPassword = await passwordHashing(data.password);
     const userAlreadyExist = await this.repository.userExist(data.name);
     if (userAlreadyExist) {
       throw new UserNameAlreadyExistError();
     }
-    const user = await this.repository.createUser(data);
+    const user = await this.repository.createUser({
+      ...data,
+      password: hashedPassword,
+      isAdmin: data.isAdmin,
+      permissions: {
+        canUpdate: data.permissions?.canUpdate ?? false,
+        canDelete: data.permissions?.canDelete ?? false
+      }
+    });
     return user;
   }
 };
@@ -635,7 +660,7 @@ async function CreateUserController(req, res, next) {
     const createdUser = await createUserUseCase.execute({
       name,
       isAdmin: false,
-      password: await passwordHashing(password),
+      password,
       job
     });
     const response = responseFactory({
@@ -823,10 +848,8 @@ var UpdateUserUseCase = class {
     this.repository = repository;
   }
   async execute(id, data, authenticatedUserId) {
-    const { isAdmin } = await this.repository.getUserById(
-      authenticatedUserId
-    );
-    if (id === authenticatedUserId || isAdmin) {
+    const authUser = await this.repository.getUserById(authenticatedUserId);
+    if (id === authenticatedUserId || authUser?.isAdmin) {
       let canUpdate = false;
       if (data.name !== void 0) {
         const user2 = await this.repository.getUser(data.name);
@@ -908,7 +931,7 @@ async function UpdateUserController(req, res) {
 
 // src/core/routes.ts
 var routes = (0, import_express.Router)();
-routes.get("/", function(req, res) {
+routes.get("/", function(_req, res) {
   res.send(`
   Welcome to API do Processo Seletivo da SCF Brasil </br>
   </br>
@@ -940,9 +963,6 @@ routes.put(
 );
 routes.post("/sessions", AuthenticateUserController);
 var routes_default = routes;
-
-// src/core/app.ts
-var import_swagger_ui_express = __toESM(require("swagger-ui-express"));
 
 // src/swagger.json
 var swagger_default = {
@@ -1864,8 +1884,6 @@ var app = (0, import_express2.default)();
 app.set("view engine", "jade");
 app.use(import_express2.default.json());
 app.use(import_express2.default.urlencoded({ extended: true }));
-app.use(import_body_parser.default.json());
-app.use(import_body_parser.default.urlencoded({ extended: true }));
 app.use(import_express2.default.static(__dirname + "/public"));
 app.use("/api-docs", import_swagger_ui_express.default.serve, import_swagger_ui_express.default.setup(swagger_default));
 app.use("/", routes_default);

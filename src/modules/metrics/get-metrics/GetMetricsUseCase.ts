@@ -1,5 +1,6 @@
-import { IDatabaseRepository, Metrics } from "@database";
 import { inject, injectable } from "tsyringe";
+
+import { IDatabaseRepository, Metrics } from "@database/IDatabaseRepository";
 
 @injectable()
 export class GetMetricsUseCase {

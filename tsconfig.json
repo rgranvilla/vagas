@@ -8,14 +8,15 @@
       "@app": ["./src/core/app.ts"],
       "@server": ["./src/core/server.ts"],
       "@config/*": ["./src/config/*"],
-      "@database": ["./src/core/database"],
+      "@database/*": ["./src/core/database/*"],
       "@factories/*": ["./src/core/factories/*"],
       "@utils/*": ["./src/core/utils/*"],
       "@errors/*": ["./src/core/errors/*"],
       "@routes/*": ["./src/core/routes.ts"],
       "@middlewares/*": ["./src/core/middlewares/*"],
       "@containers": ["./src/core/containers.ts"],
-      "@modules/*": ["./src/modules/*"]
+      "@modules/*": ["./src/modules/*"],
+      "@tests/*": ["./src/tests/*"]
     },
     "outDir": "dist",
     "strict": true,

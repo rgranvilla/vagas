@@ -1,10 +1,11 @@
-import { HandleErrors } from "@errors/HandleErrors";
-import { responseFactory } from "@factories/responseFactory";
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 import { z } from "zod";
+
+import { HandleErrors } from "@errors/HandleErrors";
+import { responseFactory } from "@factories/responseFactory";
+
 import { GetUserUseCase } from "./GetUserUseCase";
-("../../factories/responseFactory");
 
 export async function GetUserController(req: Request, res: Response) {
   const requestSchema = z.object({

@@ -33,6 +33,8 @@ __export(DeleteUserController_exports, {
   DeleteUserController: () => DeleteUserController
 });
 module.exports = __toCommonJS(DeleteUserController_exports);
+var import_tsyringe2 = require("tsyringe");
+var import_zod2 = require("zod");
 
 // src/core/errors/HandleErrors.ts
 var import_zod = require("zod");
@@ -138,10 +140,6 @@ function HandleErrors(err, res) {
   });
   return res.status(response.code).json(response);
 }
-
-// src/modules/users/use-cases/delete-user/DeleteUserController.ts
-var import_tsyringe2 = require("tsyringe");
-var import_zod2 = require("zod");
 
 // src/modules/users/use-cases/delete-user/DeleteUserUseCase.ts
 var import_tsyringe = require("tsyringe");

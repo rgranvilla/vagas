@@ -1,6 +1,8 @@
+import "reflect-metadata";
+
 import { container } from "tsyringe";
 
-import { DatabaseRepository } from "@database";
+import { DatabaseRepository } from "./database";
 import { IDatabaseRepository } from "./database/IDatabaseRepository";
 
 container.registerSingleton<IDatabaseRepository>(

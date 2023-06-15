@@ -1,13 +1,13 @@
-import { UserDTO } from "@database";
-import { HandleErrors } from "@errors/HandleErrors";
-import { responseFactory } from "@factories/responseFactory";
-import { passwordHashing } from "@utils/passwordHashing";
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 import { coerce, z } from "zod";
+
+import { UserDTO } from "@database/IDatabaseRepository";
+import { HandleErrors } from "@errors/HandleErrors";
+import { responseFactory } from "@factories/responseFactory";
+import { passwordHashing } from "@utils/passwordHashing";
+
 import { UpdateUserUseCase } from "./UpdateUserUseCase";
-("../../utils/passwordHashing");
-("../../factories/responseFactory");
 
 export async function UpdateUserController(req: Request, res: Response) {
   const requestSchema = z.object({

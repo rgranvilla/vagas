@@ -43,6 +43,9 @@ __export(AuthenticateUserUseCase_exports, {
   AuthenticateUserUseCase: () => AuthenticateUserUseCase
 });
 module.exports = __toCommonJS(AuthenticateUserUseCase_exports);
+var import_bcryptjs = require("bcryptjs");
+var import_jsonwebtoken = __toESM(require("jsonwebtoken"));
+var import_tsyringe = require("tsyringe");
 
 // src/config/auth.ts
 var auth_default = {
@@ -68,9 +71,6 @@ var InvalidCredentialsError = class extends AppError {
 };
 
 // src/modules/sessions/use-cases/authenticate-user/AuthenticateUserUseCase.ts
-var import_bcryptjs = require("bcryptjs");
-var import_jsonwebtoken = __toESM(require("jsonwebtoken"));
-var import_tsyringe = require("tsyringe");
 var AuthenticateUserUseCase = class {
   constructor(repository) {
     this.repository = repository;

@@ -1,11 +1,12 @@
-import { HandleErrors } from "@errors/HandleErrors";
-import { responseFactory } from "@factories/responseFactory";
 import { Request, Response } from "express";
-import { UserDTO } from "src/core/database/IDatabaseRepository";
 import { container } from "tsyringe";
 import { z } from "zod";
+
+import { UserDTO } from "@database/IDatabaseRepository";
+import { HandleErrors } from "@errors/HandleErrors";
+import { responseFactory } from "@factories/responseFactory";
+
 import { UpdateUserPermissionsUseCase } from "./UpdateUserPermissionsUseCase";
-("../../factories/responseFactory");
 
 export async function UpdateUserPermissionsController(
   req: Request,
@@ -18,20 +19,14 @@ export async function UpdateUserPermissionsController(
     id: z.coerce.number(),
   });
 
-  const requestUserSchema = z.object({
-    id: z.coerce.number(),
-  });
-
   try {
-    const { id: authenticatedUserId } = requestUserSchema.parse(req.user);
-
     const { id, isAdmin, canUpdate, canDelete } = requestSchema.parse({
       ...req.params,
       ...(req.body as UserDTO),
     });
 
     const toUpdate = {
-      isAdmin,
+      isAdmin: isAdmin ?? false,
       permissions: {
         canUpdate: canUpdate ?? false,
         canDelete: canDelete ?? false,
@@ -44,9 +39,10 @@ export async function UpdateUserPermissionsController(
 
     const updatedUser = await updateUserPermissionsUseCase.execute(
       id,
-      toUpdate,
-      authenticatedUserId
+      toUpdate
     );
+
+    console.log(toUpdate, updatedUser);
 
     const response = responseFactory({
       status: "successfully",

@@ -33,6 +33,8 @@ __export(GetUserController_exports, {
   GetUserController: () => GetUserController
 });
 module.exports = __toCommonJS(GetUserController_exports);
+var import_tsyringe2 = require("tsyringe");
+var import_zod2 = require("zod");
 
 // src/core/errors/HandleErrors.ts
 var import_zod = require("zod");
@@ -138,10 +140,6 @@ function HandleErrors(err, res) {
   });
   return res.status(response.code).json(response);
 }
-
-// src/modules/users/use-cases/get-user/GetUserController.ts
-var import_tsyringe2 = require("tsyringe");
-var import_zod2 = require("zod");
 
 // src/modules/users/use-cases/get-user/GetUserUseCase.ts
 var import_tsyringe = require("tsyringe");

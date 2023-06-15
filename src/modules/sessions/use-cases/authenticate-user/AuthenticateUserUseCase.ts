@@ -1,9 +1,11 @@
-import auth from "@config/auth";
-import { IDatabaseRepository } from "@database";
-import { InvalidCredentialsError } from "@errors/InvalidCredentialsError";
 import { compare } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { inject, injectable } from "tsyringe";
+
+import auth from "@config/auth";
+import { IDatabaseRepository } from "@database/IDatabaseRepository";
+
+import { InvalidCredentialsError } from "@errors/InvalidCredentialsError";
 
 @injectable()
 export class AuthenticateUserUseCase {

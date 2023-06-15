@@ -1,9 +1,9 @@
-import { HandleErrors } from "@errors/HandleErrors";
-import { responseFactory } from "@factories/responseFactory";
 import { Request, Response } from "express";
 import { container } from "tsyringe";
+
+import { HandleErrors } from "@errors/HandleErrors";
+import { responseFactory } from "@factories/responseFactory";
 import { GetMetricsUseCase } from "./GetMetricsUseCase";
-("../../factories/responseFactory");
 
 export async function GetMetricsController(req: Request, res: Response) {
   try {

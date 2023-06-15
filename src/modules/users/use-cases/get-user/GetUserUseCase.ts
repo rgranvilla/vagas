@@ -1,6 +1,8 @@
-import { IDatabaseRepository, User } from "@database";
-import { ResourceNotFoundError } from "@errors/ResourceNotFoundError";
 import { inject, injectable } from "tsyringe";
+
+import { IDatabaseRepository, User } from "@database/IDatabaseRepository";
+
+import { ResourceNotFoundError } from "@errors/ResourceNotFoundError";
 
 @injectable()
 export class GetUserUseCase {

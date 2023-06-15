@@ -33,6 +33,8 @@ __export(UpdateUserPermissionsController_exports, {
   UpdateUserPermissionsController: () => UpdateUserPermissionsController
 });
 module.exports = __toCommonJS(UpdateUserPermissionsController_exports);
+var import_tsyringe2 = require("tsyringe");
+var import_zod2 = require("zod");
 
 // src/core/errors/HandleErrors.ts
 var import_zod = require("zod");
@@ -139,22 +141,13 @@ function HandleErrors(err, res) {
   return res.status(response.code).json(response);
 }
 
-// src/modules/admin/update-user-permissions/UpdateUserPermissionsController.ts
-var import_tsyringe2 = require("tsyringe");
-var import_zod2 = require("zod");
-
 // src/modules/admin/update-user-permissions/UpdateUserPermissionsUseCase.ts
 var import_tsyringe = require("tsyringe");
 var UpdateUserPermissionsUseCase = class {
   constructor(repository) {
     this.repository = repository;
   }
-  async execute(id, data, authenticatedUserId) {
-    const { isAdmin } = await this.repository.getUserById(
-      authenticatedUserId
-    );
-    if (!isAdmin)
-      throw new UnauthorizedActionError();
+  async execute(id, data) {
     const user = await this.repository.updateUserPermissions(id, data);
     if (!user) {
       throw new ResourceNotFoundError();
@@ -175,11 +168,7 @@ async function UpdateUserPermissionsController(req, res) {
     canDelete: import_zod2.z.boolean().optional().default(false),
     id: import_zod2.z.coerce.number()
   });
-  const requestUserSchema = import_zod2.z.object({
-    id: import_zod2.z.coerce.number()
-  });
   try {
-    const { id: authenticatedUserId } = requestUserSchema.parse(req.user);
     const { id, isAdmin, canUpdate, canDelete } = requestSchema.parse({
       ...req.params,
       ...req.body
@@ -196,8 +185,7 @@ async function UpdateUserPermissionsController(req, res) {
     );
     const updatedUser = await updateUserPermissionsUseCase.execute(
       id,
-      toUpdate,
-      authenticatedUserId
+      toUpdate
     );
     const response = responseFactory({
       status: "successfully",

@@ -52,25 +52,12 @@ var ResourceNotFoundError = class extends AppError {
   }
 };
 
-// src/core/errors/UnauthorizedActionError.ts
-var UnauthorizedActionError = class extends AppError {
-  constructor() {
-    super("You are not authorized to perform this action.", 401);
-    this.name = "unauthorized";
-  }
-};
-
 // src/modules/admin/update-user-permissions/UpdateUserPermissionsUseCase.ts
 var UpdateUserPermissionsUseCase = class {
   constructor(repository) {
     this.repository = repository;
   }
-  async execute(id, data, authenticatedUserId) {
-    const { isAdmin } = await this.repository.getUserById(
-      authenticatedUserId
-    );
-    if (!isAdmin)
-      throw new UnauthorizedActionError();
+  async execute(id, data) {
     const user = await this.repository.updateUserPermissions(id, data);
     if (!user) {
       throw new ResourceNotFoundError();

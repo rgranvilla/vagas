@@ -1,9 +1,10 @@
-import { HandleErrors } from "@errors/HandleErrors";
-import { responseFactory } from "@factories/responseFactory";
 import { Request, Response } from "express";
 import { container } from "tsyringe";
+
+import { HandleErrors } from "@errors/HandleErrors";
+import { responseFactory } from "@factories/responseFactory";
+
 import { GetUsersUseCase } from "./GetUsersUseCase";
-("../../factories/responseFactory");
 
 export async function GetUsersController(req: Request, res: Response) {
   try {

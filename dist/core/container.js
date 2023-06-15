@@ -32,6 +32,7 @@ var __decorateClass = (decorators, target, key, kind) => {
 };
 
 // src/core/container.ts
+var import_reflect_metadata = require("reflect-metadata");
 var import_tsyringe2 = require("tsyringe");
 
 // src/core/database/index.ts
@@ -43,6 +44,29 @@ var DatabaseRepository = class {
     this._database = { users: [], metrics: [] };
     this._lastId = 0;
     this._loadDatabase();
+  }
+  async open() {
+    this._database = {
+      users: [
+        {
+          id: 1,
+          name: "admin",
+          isAdmin: true,
+          password: "$2a$06$JTkakiET1QKLLUQbDEpXs..VSuYpxcvWVnfS0hVuxxi6PvQz5U2uK",
+          job: "Admin",
+          permissions: { canUpdate: true, canDelete: true }
+        }
+      ],
+      metrics: []
+    };
+    await this.persist();
+  }
+  async close() {
+    this._database = {
+      users: [],
+      metrics: []
+    };
+    await this.persist();
   }
   async _loadDatabase() {
     const databasePath = import_node_path.default.join(__dirname, "./db.json");

@@ -74,10 +74,8 @@ var UpdateUserUseCase = class {
     this.repository = repository;
   }
   async execute(id, data, authenticatedUserId) {
-    const { isAdmin } = await this.repository.getUserById(
-      authenticatedUserId
-    );
-    if (id === authenticatedUserId || isAdmin) {
+    const authUser = await this.repository.getUserById(authenticatedUserId);
+    if (id === authenticatedUserId || authUser?.isAdmin) {
       let canUpdate = false;
       if (data.name !== void 0) {
         const user2 = await this.repository.getUser(data.name);

@@ -16,7 +16,7 @@ export interface User {
 export interface UserDTO {
   name: string;
   password: string;
-  isAdmin: boolean;
+  isAdmin?: boolean;
   permissions?: {
     canUpdate: boolean;
     canDelete: boolean;

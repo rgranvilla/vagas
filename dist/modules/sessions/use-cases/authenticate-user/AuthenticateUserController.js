@@ -43,6 +43,8 @@ __export(AuthenticateUserController_exports, {
   AuthenticateUserController: () => AuthenticateUserController
 });
 module.exports = __toCommonJS(AuthenticateUserController_exports);
+var import_tsyringe2 = require("tsyringe");
+var import_zod2 = require("zod");
 
 // src/core/errors/HandleErrors.ts
 var import_zod = require("zod");
@@ -149,9 +151,10 @@ function HandleErrors(err, res) {
   return res.status(response.code).json(response);
 }
 
-// src/modules/sessions/use-cases/authenticate-user/AuthenticateUserController.ts
-var import_tsyringe2 = require("tsyringe");
-var import_zod2 = require("zod");
+// src/modules/sessions/use-cases/authenticate-user/AuthenticateUserUseCase.ts
+var import_bcryptjs = require("bcryptjs");
+var import_jsonwebtoken = __toESM(require("jsonwebtoken"));
+var import_tsyringe = require("tsyringe");
 
 // src/config/auth.ts
 var auth_default = {
@@ -160,9 +163,6 @@ var auth_default = {
 };
 
 // src/modules/sessions/use-cases/authenticate-user/AuthenticateUserUseCase.ts
-var import_bcryptjs = require("bcryptjs");
-var import_jsonwebtoken = __toESM(require("jsonwebtoken"));
-var import_tsyringe = require("tsyringe");
 var AuthenticateUserUseCase = class {
   constructor(repository) {
     this.repository = repository;

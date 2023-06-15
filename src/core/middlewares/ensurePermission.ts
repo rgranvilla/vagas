@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 
-import { DatabaseRepository } from "@database";
+import { IDatabaseRepository } from "@database/IDatabaseRepository";
 import { HandleErrors } from "@errors/HandleErrors";
 import { UnauthorizedActionError } from "@errors/UnauthorizedActionError";
+import { container } from "tsyringe";
 
 export async function ensurePermissions(
   request: Request,
@@ -12,7 +13,9 @@ export async function ensurePermissions(
   const { id } = request.user;
 
   try {
-    const repository = new DatabaseRepository();
+    const repository: IDatabaseRepository = await container.resolve(
+      "Repository"
+    );
     const user = await repository.getUserById(+id);
 
     if (request.method === "PUT" && !user?.permissions.canUpdate) {

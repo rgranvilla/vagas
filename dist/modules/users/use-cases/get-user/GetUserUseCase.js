@@ -33,6 +33,7 @@ __export(GetUserUseCase_exports, {
   GetUserUseCase: () => GetUserUseCase
 });
 module.exports = __toCommonJS(GetUserUseCase_exports);
+var import_tsyringe = require("tsyringe");
 
 // src/core/errors/AppError.ts
 var AppError = class extends Error {
@@ -52,7 +53,6 @@ var ResourceNotFoundError = class extends AppError {
 };
 
 // src/modules/users/use-cases/get-user/GetUserUseCase.ts
-var import_tsyringe = require("tsyringe");
 var GetUserUseCase = class {
   constructor(repository) {
     this.repository = repository;

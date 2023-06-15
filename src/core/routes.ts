@@ -17,7 +17,7 @@ import { UpdateUserController } from "@modules/users/use-cases/update-user/Updat
 
 const routes = Router();
 
-routes.get("/", function (req: Request, res: Response) {
+routes.get("/", function (_req: Request, res: Response) {
   res.send(`
   Welcome to API do Processo Seletivo da SCF Brasil </br>
   </br>

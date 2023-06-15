@@ -33,6 +33,8 @@ __export(UpdateUserController_exports, {
   UpdateUserController: () => UpdateUserController
 });
 module.exports = __toCommonJS(UpdateUserController_exports);
+var import_tsyringe2 = require("tsyringe");
+var import_zod2 = require("zod");
 
 // src/core/errors/HandleErrors.ts
 var import_zod = require("zod");
@@ -146,10 +148,6 @@ async function passwordHashing(password) {
   return hashedPassword;
 }
 
-// src/modules/users/use-cases/update-user/UpdateUserController.ts
-var import_tsyringe2 = require("tsyringe");
-var import_zod2 = require("zod");
-
 // src/modules/users/use-cases/update-user/UpdateUserUseCase.ts
 var import_tsyringe = require("tsyringe");
 var UpdateUserUseCase = class {
@@ -157,10 +155,8 @@ var UpdateUserUseCase = class {
     this.repository = repository;
   }
   async execute(id, data, authenticatedUserId) {
-    const { isAdmin } = await this.repository.getUserById(
-      authenticatedUserId
-    );
-    if (id === authenticatedUserId || isAdmin) {
+    const authUser = await this.repository.getUserById(authenticatedUserId);
+    if (id === authenticatedUserId || authUser?.isAdmin) {
       let canUpdate = false;
       if (data.name !== void 0) {
         const user2 = await this.repository.getUser(data.name);

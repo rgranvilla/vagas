@@ -1,6 +1,10 @@
 import { inject, injectable } from "tsyringe";
 
-import { IDatabaseRepository, User, UserDTO } from "@database";
+import {
+  IDatabaseRepository,
+  User,
+  UserDTO,
+} from "@database/IDatabaseRepository";
 
 import { ResourceNotFoundError } from "@errors/ResourceNotFoundError";
 import { UnauthorizedActionError } from "@errors/UnauthorizedActionError";
@@ -18,11 +22,9 @@ export class UpdateUserUseCase {
     data: Partial<UserDTO>,
     authenticatedUserId: number
   ): Promise<User> {
-    const { isAdmin } = (await this.repository.getUserById(
-      authenticatedUserId
-    )) as User;
+    const authUser = await this.repository.getUserById(authenticatedUserId);
 
-    if (id === authenticatedUserId || isAdmin) {
+    if (id === authenticatedUserId || authUser?.isAdmin) {
       let canUpdate: boolean = false;
       if (data.name !== undefined) {
         const user = await this.repository.getUser(data.name);

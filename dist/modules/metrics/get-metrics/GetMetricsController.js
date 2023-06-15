@@ -33,6 +33,7 @@ __export(GetMetricsController_exports, {
   GetMetricsController: () => GetMetricsController
 });
 module.exports = __toCommonJS(GetMetricsController_exports);
+var import_tsyringe2 = require("tsyringe");
 
 // src/core/errors/HandleErrors.ts
 var import_zod = require("zod");
@@ -138,9 +139,6 @@ function HandleErrors(err, res) {
   });
   return res.status(response.code).json(response);
 }
-
-// src/modules/metrics/get-metrics/GetMetricsController.ts
-var import_tsyringe2 = require("tsyringe");
 
 // src/modules/metrics/get-metrics/GetMetricsUseCase.ts
 var import_tsyringe = require("tsyringe");

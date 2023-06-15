@@ -1,12 +1,11 @@
-import { HandleErrors } from "@errors/HandleErrors";
-import { responseFactory } from "@factories/responseFactory";
-import { passwordHashing } from "@utils/passwordHashing";
 import { NextFunction, Request, Response } from "express";
 import { container } from "tsyringe";
 import { z } from "zod";
+
+import { HandleErrors } from "@errors/HandleErrors";
+import { responseFactory } from "@factories/responseFactory";
+
 import { CreateUserUseCase } from "./CreateUserUseCase";
-("../../utils/passwordHashing");
-("../../factories/responseFactory");
 
 export async function CreateUserController(
   req: Request,
@@ -27,7 +26,7 @@ export async function CreateUserController(
     const createdUser = await createUserUseCase.execute({
       name,
       isAdmin: false,
-      password: await passwordHashing(password),
+      password,
       job,
     });
 

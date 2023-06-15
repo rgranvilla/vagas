@@ -26,10 +26,10 @@ var users = [
   }
 ];
 var metrics = [
-  { id: 1, readCount: 37 },
+  { id: 1, readCount: 48 },
   { id: 2, readCount: 1 },
-  { id: 3, readCount: 9 },
-  { id: 4, readCount: 3 }
+  { id: 3, readCount: 10 },
+  { id: 4, readCount: 4 }
 ];
 var db_default = {
   users,

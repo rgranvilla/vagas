@@ -33,6 +33,14 @@ __export(CreateUserUseCase_exports, {
   CreateUserUseCase: () => CreateUserUseCase
 });
 module.exports = __toCommonJS(CreateUserUseCase_exports);
+var import_tsyringe = require("tsyringe");
+
+// src/core/utils/passwordHashing.ts
+var import_bcryptjs = require("bcryptjs");
+async function passwordHashing(password) {
+  const hashedPassword = await (0, import_bcryptjs.hash)(password, 6);
+  return hashedPassword;
+}
 
 // src/core/errors/AppError.ts
 var AppError = class extends Error {
@@ -52,17 +60,25 @@ var UserNameAlreadyExistError = class extends AppError {
 };
 
 // src/modules/users/use-cases/create-user/CreateUserUseCase.ts
-var import_tsyringe = require("tsyringe");
 var CreateUserUseCase = class {
   constructor(repository) {
     this.repository = repository;
   }
   async execute(data) {
+    const hashedPassword = await passwordHashing(data.password);
     const userAlreadyExist = await this.repository.userExist(data.name);
     if (userAlreadyExist) {
       throw new UserNameAlreadyExistError();
     }
-    const user = await this.repository.createUser(data);
+    const user = await this.repository.createUser({
+      ...data,
+      password: hashedPassword,
+      isAdmin: data.isAdmin,
+      permissions: {
+        canUpdate: data.permissions?.canUpdate ?? false,
+        canDelete: data.permissions?.canDelete ?? false
+      }
+    });
     return user;
   }
 };

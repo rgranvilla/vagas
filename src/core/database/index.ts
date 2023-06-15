@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { injectable } from "tsyringe";
+
 import {
   IDatabaseRepository,
   Metrics,
@@ -28,15 +29,25 @@ export class DatabaseRepository implements IDatabaseRepository {
     try {
       const data = await fs.readFile(databasePath, "utf-8");
       this._database = JSON.parse(data) as DatabaseData;
-      this._updateLastId();
-    } catch {
-      this.persist();
+      await this._updateLastId();
+    } catch (error: any) {
+      if (error.code === "ENOENT") {
+        // Create the db.json file with an empty database
+        this._database = { users: [], metrics: [] };
+        await this.persist();
+      } else {
+        throw error;
+      }
     }
   }
 
   private async persist(): Promise<void> {
     const databasePath = path.join(__dirname, "./db.json");
-    await fs.writeFile(databasePath, JSON.stringify(this._database));
+    try {
+      await fs.writeFile(databasePath, JSON.stringify(this._database));
+    } catch (error: any) {
+      throw new Error(`Failed to persist the database: ${error.message}`);
+    }
   }
 
   private _updateLastId(): void {
@@ -49,7 +60,7 @@ export class DatabaseRepository implements IDatabaseRepository {
   }
 
   private _autoIncrement(): number {
-    return this._lastId + 1;
+    return ++this._lastId;
   }
 
   private async _setUserMetrics(user: User): Promise<void> {
@@ -134,7 +145,7 @@ export class DatabaseRepository implements IDatabaseRepository {
     await this._loadDatabase();
 
     const user = {
-      id: this._autoIncrement(),
+      id: await this._autoIncrement(),
       ...data,
       isAdmin: false,
       permissions: {
@@ -227,7 +238,7 @@ export class DatabaseRepository implements IDatabaseRepository {
 
       if (rowIndex > -1) {
         records.splice(rowIndex, 1);
-        this.persist();
+        await this.persist();
       }
     }
   }

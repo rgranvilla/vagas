@@ -1,10 +1,11 @@
-import { HandleErrors } from "@errors/HandleErrors";
-import { responseFactory } from "@factories/responseFactory";
 import { NextFunction, Request, Response } from "express";
 import { container } from "tsyringe";
 import { z } from "zod";
+
+import { HandleErrors } from "@errors/HandleErrors";
+import { responseFactory } from "@factories/responseFactory";
+
 import { AuthenticateUserUseCase } from "./AuthenticateUserUseCase";
-("../../factories/responseFactory");
 
 export async function AuthenticateUserController(
   req: Request,

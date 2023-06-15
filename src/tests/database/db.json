@@ -1,0 +1,1 @@
+{"users":[{"id":0,"name":"admin","isAdmin":true,"password":"$2a$06$JTkakiET1QKLLUQbDEpXs..VSuYpxcvWVnfS0hVuxxi6PvQz5U2uK","job":"Admin","permissions":{"canUpdate":true,"canDelete":true}}],"metrics":[{"id":0,"readCount":1}]}
