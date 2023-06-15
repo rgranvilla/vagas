@@ -11,7 +11,7 @@ export default defineConfig({
     singleThread: true,
     coverage: {
       provider: "istanbul",
-      reportsDirectory: "src/tests/coverage/",
+      reportsDirectory: "coverage",
       reporter: ["text", "json", "html"],
     },
   },

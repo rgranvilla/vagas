@@ -10,8 +10,7 @@
     "prestart": "npm run build",
     "predev": "npm run build",
     "test": "vitest",
-    "test:ui": "vitest --ui --coverage --inspect",
-    "test:run": "vitest run"
+    "test:ui": "vitest --ui --coverage --inspect"
   },
   "author": "",
   "license": "ISC",
