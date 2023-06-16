@@ -19,7 +19,7 @@ const routes = Router();
 
 routes.get("/", function (_req: Request, res: Response) {
   res.send(`
-  Welcome to API do Processo Seletivo da SCF Brasil </br>
+  Welcome to API of Selection Process SCF Brazil </br>
   </br>
   Access API Documentation: <a href="${env.API_BASE_URL}:${env.PORT}/api-docs">${env.API_BASE_URL}:${env.PORT}/api-docs</a> </br>
   `);
